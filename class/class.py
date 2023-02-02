@@ -5,10 +5,10 @@ class Student:
         self.age = age
     
     def get_age(self):
-        return self.age
+        self.age= age
 
-    def set_age(self, age: int):
-        self.age = age
+    def set_age(self, age):
+        print(self.age)
     
     def display_student_details(self):
         print("Name: ", self.name)
