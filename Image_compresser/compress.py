@@ -3,7 +3,6 @@ from PIL import Image
 from tkinter.filedialog import*
 
 print("IMAGE COMPRESSOR")
-print("UPLOAD FILE")
 file_path = askopenfilename()
 img = PIL.Image.open(file_path)
 #myHeight , myWidth = img.size
