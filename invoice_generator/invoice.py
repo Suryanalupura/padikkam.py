@@ -1,20 +1,33 @@
-import os
-from InvoiceGenerator.api import Client,Creator,Invoice,Provider,Item
-from InvoiceGenerator.Pdf import simpleInvoice
+from datetime import datetime, date
+from pyinvoice.models import InvoiceInfo, ServiceProviderInfo, ClientInfo, Item, Transaction
+from pyinvoice.templates import SimpleInvoice
 
-os.environ["INVOICE_LANG"] = "en"
+doc = SimpleInvoice('invoice.pdf')
+#doc.is_paid = True
 
-client= Client('Youtube')
-provider = Provider('Youtube', bank_account= '123456789',bank_code='12345')
-creator=Creator('justin singh')
 
-invoice = Invoice(client,provider,creator)
-invoice.currency_locale= 'en_USUTF-8'
+doc.invoice_info = InvoiceInfo(1023, datetime.now(), datetime.now())  
 
-invoice.add_item(Item(32,600, description='zxcv'))
-invoice.add_item(Item(60,600, description='zxcv',tax=11))
-invoice.add_item(Item(32,600, description='zxcv',tax=22))
-invoice.add_item(Item(32,600, description='zxcv',tax=33))
+doc.service_provider_info = ServiceProviderInfo(
+    name='kk bakers',
+    street='Ramavarmapuram',
+    city='Thrissur',
+    state='kerala',
+    post_code='123',
+    
+)
 
-pdf=simpleInvoice(invoice)
-pdf.gen("invoice.pdf",generate_qr_code=True)
+doc.client_info = ClientInfo(name= 'kk', email='kk@email.com')
+
+doc.add_item(Item('puffs', '', 10, '15'))
+doc.add_item(Item('sandwich', '', 10, '30'))
+doc.add_item(Item('burgers', '', 10, '40'))
+
+doc.set_item_tax_rate(20)  
+
+doc.add_transaction(Transaction('Paypal', 111, datetime.now(), 300))
+doc.add_transaction(Transaction('Stripe', 222, date.today(), 200))
+
+doc.set_bottom_tip("Email: email@email.com<br />Thank you for shopping ")
+
+doc.finish()
